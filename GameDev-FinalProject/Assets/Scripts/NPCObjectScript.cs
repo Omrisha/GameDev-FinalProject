@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Rendering;
 
 public class NPCObjectScript : MonoBehaviour
 {
-    public bool npcArrived;
     // Start is called before the first frame update
     void Start()
     {
@@ -22,8 +22,16 @@ public class NPCObjectScript : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            npcArrived = true;
-            other.GetComponent<NPCMotion>().IsWalking = false;
+            var npcMotion = other.GetComponent<NPCMotion>();
+            if (CompareTag("PlayerObject"))
+            {
+                if (!npcMotion.isOnTrain)
+                {
+                    npcMotion.IsWalking = false;
+                    npcMotion.isOnTrain = true;
+                    CounterScript.numberOfPeople++;
+                }
+            }
         }
     }
 
@@ -31,9 +39,16 @@ public class NPCObjectScript : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            other.GetComponent<NPCMotion>().IsWalking = true;
-            npcArrived = false;
+            var npcMotion = other.GetComponent<NPCMotion>();
+            if (CompareTag("PlayerObject"))
+            {
+                if (npcMotion.isOnTrain)
+                {
+                    npcMotion.IsWalking = true;
+                    npcMotion.isOnTrain = false;
+                    CounterScript.numberOfPeople--;
+                }
+            }
         }
-        
     }
 }

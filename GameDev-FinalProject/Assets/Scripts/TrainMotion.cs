@@ -1,18 +1,16 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class TrainMotion : MonoBehaviour
 {
-    public NPCObjectScript Object1;
-    public NPCObjectScript Object2;
-    public NPCObjectScript Object3;
-    public NPCObjectScript Object4;
-    
     public GameObject Wheels;
     public Animator WheelsAnimator;
-
+    public Rigidbody rigidBody;
+    
     public GameObject targetA;
     public GameObject targetB;
     NavMeshAgent theAgent;
@@ -21,20 +19,22 @@ public class TrainMotion : MonoBehaviour
     {
         WheelsAnimator = Wheels.GetComponent<Animator>();
         theAgent = GetComponent<NavMeshAgent>();
+        rigidBody = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Object1.npcArrived && Object2.npcArrived && Object3.npcArrived & Object4.npcArrived)
+        if (CounterScript.numberOfPeople == 4)
         {
             theAgent.SetDestination(targetB.transform.position);
             WheelsAnimator.SetTrigger("Start");
         }
 
-        if (transform.position == targetB.transform.position)
+        if (Vector3.Distance(rigidBody.position, targetB.transform.position).CompareTo(0) == 0)
         {
-            transform.position = targetA.transform.position;
+            if (CounterScript.numberOfPeople == 0)
+                rigidBody.MovePosition(targetA.transform.position);
         }
     }
 }
