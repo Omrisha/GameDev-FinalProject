@@ -34,7 +34,7 @@ public class TrainMotion : MonoBehaviour
         if (Vector3.Distance(rigidBody.position, targetB.transform.position).CompareTo(0) == 0)
         {
             if (CounterScript.numberOfPeople == 0)
-                rigidBody.MovePosition(targetA.transform.position);
+                theAgent.SetDestination(targetA.transform.position);
         }
     }
 }
